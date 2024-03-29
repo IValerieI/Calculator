@@ -5,11 +5,10 @@ import com.company.calculator.service.CalcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/calculacte")
+@RequestMapping("/calculate")
 public class CalcController {
 
     private final CalcService calcService;
@@ -21,10 +20,10 @@ public class CalcController {
 
     @GetMapping()
     public ResponseEntity<VacationResponse> calculateVacation(
-            @RequestParam(value = "salary", defaultValue = "50000") double salary,
-            @RequestParam(value = "numOfVacationDays", defaultValue = "14") int numOfVacationDays
+            @RequestParam(value = "avgMonthSalary", defaultValue = "100000") double avgMonthSalary,
+            @RequestParam(value = "vacationDays", defaultValue = "14") int vacationDays
     ) {
-        VacationResponse vacationResponse = calcService.calculateVacation(salary, numOfVacationDays);
+        VacationResponse vacationResponse = calcService.calculateVacation(avgMonthSalary, vacationDays);
         return new ResponseEntity<>(vacationResponse, HttpStatus.OK);
     }
 

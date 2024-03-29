@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CalcService {
 
-    public VacationResponse calculateVacation(double salary, int numOfVacationDays) {
+    public VacationResponse calculateVacation(double avgMonthSalary, int vacationDays) {
+        // 29.3 - Среднее количество календарных дней в полностью отработанных месяцах
+        double vacationPay = Math.round((avgMonthSalary / 29.3) * vacationDays * 100) / 100.0;
+
         VacationResponse vacationResponse = new VacationResponse();
-        vacationResponse.setResult("res");
+        vacationResponse.setVacationPay(vacationPay);
         return vacationResponse;
     }
 
