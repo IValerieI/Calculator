@@ -2,6 +2,8 @@ package com.company.calculator.controllers;
 
 import com.company.calculator.dto.VacationResponse;
 import com.company.calculator.service.CalcService;
+import com.company.calculator.utils.Calendar;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.hibernate.validator.constraints.Range;
@@ -29,6 +31,25 @@ public class CalcController {
         VacationResponse vacationResponse = calcService.calcVacationPay(avgMonthSalary, vacationDays);
         return new ResponseEntity<>(vacationResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/dates")
+    public ResponseEntity<VacationResponse> calculateVacationDates(
+            @RequestParam(value = "avgMonthSalary") @Min(0) double avgMonthSalary,
+            @RequestParam(value = "vacationDays") @Range(min = 1, max = 180) int vacationDays,
+            @RequestParam(value = "start") String start,
+            @RequestParam(value = "end") String end
+    ) throws JsonProcessingException {
+        VacationResponse vacationResponse = calcService.calcVacationPayDates(avgMonthSalary, vacationDays, start, end);
+        return new ResponseEntity<>(vacationResponse, HttpStatus.OK);
+    }
+
+//    @GetMapping("/test")
+//    public String calculateVacationDates() throws JsonProcessingException {
+//        //int res = Calendar.getHolidayDaysCount("2024-01-01", "2024-01-15");
+//        //int res = Calendar.getHolidayDaysCount("2024-02-01", "2024-02-02");
+//        int res = Calendar.getHolidayDaysCount("2024-01-01", "2024-01-01");
+//        return "res is " + res;
+//    }
 
 
 }

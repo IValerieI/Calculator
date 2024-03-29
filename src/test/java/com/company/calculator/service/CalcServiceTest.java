@@ -1,6 +1,7 @@
 package com.company.calculator.service;
 
 import com.company.calculator.dto.VacationResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,4 +26,15 @@ public class CalcServiceTest {
         Assertions.assertEquals(57337.88, res2.getVacationPay());
         Assertions.assertEquals(95563.14, res3.getVacationPay());
     }
+
+    @Test
+    public void CalcService_calcVacationPayDates_ReturnVacationPay() throws JsonProcessingException {
+        VacationResponse res1 = calcService.calcVacationPayDates(120000, 61,
+                "2024-02-05", "2024-04-05");
+
+        Assertions.assertEquals(167918.090, res1.getVacationPay());
+    }
+
+
+
 }
