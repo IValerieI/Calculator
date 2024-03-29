@@ -1,116 +1,127 @@
 package com.company.calculator.utils;
 
+import com.company.calculator.exceptions.WrongDatesException;
+import com.company.calculator.exceptions.WrongVacationDaysException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class Calendar {
 
-    public static int getHolidayDaysCount(String start, String end) throws JsonProcessingException {
-        String[] startArr = start.split("-");
-        String[] endArr = end.split("-");
+    private final String holidaysJSON;
 
-        int startMonth = Integer.parseInt(startArr[1]);
-        int startDay = Integer.parseInt(startArr[2]);
+    public Calendar() {
+        holidaysJSON = getJSON();
+    }
 
-        int endMonth = Integer.parseInt(endArr[1]);
-        System.out.println(Arrays.toString(endArr));
-        int endDay = Integer.parseInt(endArr[2]);
+    private String getJSON() {
+        RestClient restClient = RestClient.create();
+        String result = restClient.get()
+                .uri("https://xmlcalendar.ru/data/ru/2024/calendar.json")
+                .retrieve()
+                .body(String.class);
+        return result;
+    }
 
-        System.out.println("start month");
-        System.out.println(startMonth);
-        System.out.println("start day");
-        System.out.println(startDay);
-        System.out.println("end month");
-        System.out.println(endMonth);
-        System.out.println("end day");
-        System.out.println(endDay);
+    public String getHolidaysJSON() {
+        return holidaysJSON;
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        CalenderObject calenderObject = mapper.readValue(getHolidayDaysJSON(), CalenderObject.class);
-        List<Month> months = calenderObject.getMonths();
+    public int getHolidaysCount(String start, String end, int vacationDays) throws JsonProcessingException {
+        int[] startArr = formatDate(start);
+        int[] endArr = formatDate(end);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startDate = LocalDate.parse(start, formatter);
-        LocalDate endDate = LocalDate.parse(end, formatter);
-        long allDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        int startMonth = startArr[1];
+        int startDay = startArr[2];
 
-        System.out.println("all days");
-        System.out.println(allDays);
+        int endMonth = endArr[1];
+        int endDay = endArr[2];
+
+        if (startMonth > endMonth || (startMonth == endMonth && startDay > endDay)) {
+            throw new WrongDatesException("Дата начала отпуска позже, чем дата окончания отпуска");
+        }
+
+        int allDays = getAllDays(start, end);
+        if (allDays != vacationDays) {
+            throw new WrongVacationDaysException("Указанное количество дней отпуска превышает количество дней между датами");
+        }
+
+        List<Month> monthList = getMonthList();
         int holidays = 0;
 
         if (startMonth == endMonth) {
-            int[] days = fromStringToIntArray(months.get(startMonth - 1).getDays());
-            System.out.println("holidays in month");
-            System.out.println(Arrays.toString(days));
+            int[] days = formatDays(monthList.get(startMonth - 1).getDays());
             for (int day : days) {
                 if (startDay <= day && day <= endDay) {
-                    System.out.println(day);
-                    //allDays -= 1;
                     holidays += 1;
                 }
             }
         } else {
-            int[] startMonthDays = fromStringToIntArray(months.get(startMonth - 1).getDays());
-            for (int startMonthDay : startMonthDays) {
-                if (startDay <= startMonthDay) {
-                    System.out.println("1 month");
-                    System.out.println(startMonthDay);
-                    //allDays -= 1;
+            int[] startMonthDays = formatDays(monthList.get(startMonth - 1).getDays());
+            for (int day : startMonthDays) {
+                if (startDay <= day) {
                     holidays += 1;
                 }
             }
-            int[] endMonthDays = fromStringToIntArray(months.get(endMonth - 1).getDays());
-            for (int endMonthDay : endMonthDays) {
-                if (endMonthDay <= endDay) {
-                    //allDays -= 1;
-                    System.out.println("2 month");
-                    System.out.println(endMonthDay);
+            int[] endMonthDays = formatDays(monthList.get(endMonth - 1).getDays());
+            for (int day : endMonthDays) {
+                if (day <= endDay) {
                     holidays += 1;
                 }
             }
 
             if (startMonth != endMonth - 1) {
                 for (int month = startMonth; month < endMonth - 1; month++) {
-                    String[] days = months.get(month).getDays().split(",");
-                    //allDays -= days.length;
+                    String[] days = monthList.get(month).getDays().split(",");
                     holidays += days.length;
                 }
             }
         }
-        System.out.println("holidays");
-        System.out.println(holidays);
         return holidays;
     }
 
-    private static int[] fromStringToIntArray(String days) {
+    private int[] formatDate(String date) {
+        String[] dateStrArr = date.split("-");
+        return toIntArray(dateStrArr);
+    }
+
+    private int[] formatDays(String days) {
         days = days.replace("*", "");
         days = days.replace("+", "");
         String[] daysStringArr = days.split(",");
-        int len = daysStringArr.length;
-        int[] daysIntArr = new int[len];
+        return toIntArray(daysStringArr);
+    }
+
+    private int[] toIntArray(String[] strArray) {
+        int len = strArray.length;
+        int[] intArray = new int[len];
         for (int i = 0; i < len; i++) {
-            daysIntArr[i] = Integer.parseInt(daysStringArr[i]);
+            intArray[i] = Integer.parseInt(strArray[i]);
         }
-        return daysIntArr;
+        return intArray;
     }
 
-    private static String getHolidayDaysJSON() {
-        RestClient restClient = RestClient.create();
-
-        String result = restClient.get()
-                .uri("https://xmlcalendar.ru/data/ru/2024/calendar.json")
-                .retrieve()
-                .body(String.class);
-
-        //System.out.println(result);
-
-        return result;
+    private List<Month> getMonthList() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        CalenderObject calenderObject = mapper.readValue(getHolidaysJSON(), CalenderObject.class);
+        return calenderObject.getMonths();
     }
+
+    private int getAllDays(String start, String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        long allDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        // максимальное количество дней в отпуске 180
+        return (int) allDays;
+    }
+
+
 
 }

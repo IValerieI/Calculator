@@ -43,13 +43,5 @@ public class CalcController {
         return new ResponseEntity<>(vacationResponse, HttpStatus.OK);
     }
 
-//    @GetMapping("/test")
-//    public String calculateVacationDates() throws JsonProcessingException {
-//        //int res = Calendar.getHolidayDaysCount("2024-01-01", "2024-01-15");
-//        //int res = Calendar.getHolidayDaysCount("2024-02-01", "2024-02-02");
-//        int res = Calendar.getHolidayDaysCount("2024-01-01", "2024-01-01");
-//        return "res is " + res;
-//    }
-
 
 }
