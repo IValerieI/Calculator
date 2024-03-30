@@ -1,14 +1,10 @@
 package com.company.calculator.service;
 
 import com.company.calculator.dto.VacationResponse;
-import com.company.calculator.utils.Calendar;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)

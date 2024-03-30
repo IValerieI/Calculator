@@ -1,8 +1,8 @@
 package com.company.calculator.utils;
 
+import com.company.calculator.exceptions.InvalidHolidaysJSONException;
 import com.company.calculator.exceptions.WrongDatesException;
 import com.company.calculator.exceptions.WrongVacationDaysException;
-import com.company.calculator.service.CalcService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
