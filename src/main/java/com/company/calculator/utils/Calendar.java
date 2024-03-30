@@ -1,14 +1,11 @@
 package com.company.calculator.utils;
 
-import com.company.calculator.exceptions.InvalidHolidaysJSONException;
 import com.company.calculator.exceptions.WrongDatesException;
 import com.company.calculator.exceptions.WrongVacationDaysException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -32,13 +29,7 @@ public class Calendar {
         ResponseEntity<String> resp =
                 restTemplate.getForEntity("https://xmlcalendar.ru/data/ru/2024/calendar.json", String.class);
 
-        // проверка, что запрос завершился успешно
-        String result = resp.getStatusCode() == HttpStatus.OK ? resp.getBody() : null;
-        if (result != null && !result.isEmpty()) {
-            return result;
-        } else {
-            throw new InvalidHolidaysJSONException("Возникла ошибка при получении JSON списка с месяцами и выходными");
-        }
+        return resp.getBody();
     }
 
     public int getHolidaysCount(String start, String end, int vacationDays) throws JsonProcessingException {

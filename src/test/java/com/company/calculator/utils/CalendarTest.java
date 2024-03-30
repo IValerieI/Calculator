@@ -1,6 +1,5 @@
 package com.company.calculator.utils;
 
-import com.company.calculator.exceptions.InvalidHolidaysJSONException;
 import com.company.calculator.exceptions.WrongDatesException;
 import com.company.calculator.exceptions.WrongVacationDaysException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,6 +51,8 @@ public class CalendarTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
+
+
 
 
 }
