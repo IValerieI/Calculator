@@ -12,13 +12,8 @@ GET "/calculacte"
 Для получения списка месяцев с указанием выходных и праздников используется производственный календарь в формате json (https://xmlcalendar.ru/data/ru/2024/calendar.json).
 
 Примеры запросов (Postman):
-
-![Screenshot_1](https://github.com/IValerieI/Calculator/assets/53052683/aa353b7c-fa6b-43df-9a09-3cc872f4ec4c)
-
-![Screenshot_2](https://github.com/IValerieI/Calculator/assets/53052683/cd61e092-9275-4f8f-8602-fab251262c31)
-
-![Screenshot_3](https://github.com/IValerieI/Calculator/assets/53052683/7e3c3d30-7208-4d4e-afcb-95196ee1310e)
-
-![Screenshot_4](https://github.com/IValerieI/Calculator/assets/53052683/1430aa33-7e37-4a39-8e67-2ea51c2dc6df)
-
-![Screenshot_5](https://github.com/IValerieI/Calculator/assets/53052683/9f241b48-3689-49ab-85f2-b707dcc65126)
+![Screenshot_1](https://github.com/IValerieI/Calculator/assets/53052683/155cc32d-cef8-465e-a659-74c12955c3df)
+![Screenshot_2](https://github.com/IValerieI/Calculator/assets/53052683/bd55da3a-9d29-43ae-9035-405aa93e6d68)
+![Screenshot_3](https://github.com/IValerieI/Calculator/assets/53052683/8aa6cf42-d583-4878-a5bf-9bf5a29d4e8a)
+![Screenshot_4](https://github.com/IValerieI/Calculator/assets/53052683/3f77908c-4ff2-43bf-9d40-83add91f2353)
+![Screenshot_5](https://github.com/IValerieI/Calculator/assets/53052683/5d034f23-93ec-4442-b296-efe09d5f1fc9)
